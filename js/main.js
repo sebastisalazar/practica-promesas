@@ -13,7 +13,7 @@ const datos=[
        {nombre:"pepe",email:"pepe@gmail.com"},
 ] 
 
-const chivato="pedro";
+const chivato="pepe";
 
 
 /**************************EVENTOS**************************/
@@ -26,7 +26,7 @@ document.addEventListener('click', (ev) => {
     //si al boton que se ha hecho click tiene el ID #btninfo
     if (ev.target.matches('#btninfo')) {
 
-        console.log("Haz hecho click en el boton!")
+        console.log("Has hecho click en el boton!")
 
         //Espera 2 para llamar a la API
         setTimeout(()=>{
@@ -53,7 +53,7 @@ document.addEventListener('click', (ev) => {
 })
 
 
-
+/**************************FUNCIONES**************************/
 /**
  * LlamadaAPI busca a un usuario en un array global datos
  * @param  {String} nomAbuscar es el nombre a buscar
