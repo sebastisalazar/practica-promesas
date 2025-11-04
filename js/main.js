@@ -10,80 +10,131 @@
 /**************************VARIABLES**************************/
 
 const datos=[
-                {
-                    nombre:"pepe",
-                    email:"pepe@gmail.com"
-                }
-            ]  
+       {nombre:"pepe",email:"pepe@gmail.com"},
+] 
 
-const chivato=true;
+const chivato="pedro";
 
 
 /**************************EVENTOS**************************/
 
 document.addEventListener('click', (ev) => {
-        ev.preventDefault();
+    
+    //previene envio al servidor
+    ev.preventDefault();
+    
+    //si al boton que se ha hecho click tiene el ID #btninfo
     if (ev.target.matches('#btninfo')) {
-        pintarResultado(ev.target.id);    
+
+        console.log("Haz hecho click en el boton!")
+
+        //Espera 2 para llamar a la API
+        setTimeout(()=>{
+            
+            
+            llamadaAPI(chivato) //Chivato es el nombre a buscar declarado como global
+
+                //RESUELVE PROMESA
+                .then((respuesta)=>{
+
+                    const persona=respuesta; //Guarda la respuesta en una constante
+
+                    pintarResultado(persona); //pasa la constante a la funcion pintar Resultado
+                    
+                    //console.log( persona)
+                })
+                //SI LO QUE RECIBE ES ERROR, TAMBIEN LO ENVIA A PINTAR
+                .catch((error)=>{
+                    pintarResultado(error);
+                }) 
+        },2000)
+          
     }
 })
 
 
 
+/**
+ * LlamadaAPI busca a un usuario en un array global datos
+ * @param  {String} nomAbuscar es el nombre a buscar
+ * @returns {promise | string} Devuelve promise si el objeto es encontrado o String si no es encontrado
+ */
+const llamadaAPI=(nomAbuscar)=>{
 
-//SIMULACION 
-function api(){
-    return chivato;
-}
+    //si el nombre a buscar existe lo guarda en un una constante
+    const persona=datos.find((element)=>{
+        return element.nombre==nomAbuscar
+    })
 
-//LAMADA API
-const llamadaApi=(resulConnetion)=>{
-
+        //console.log(persona)
+    
+    //devuele el estado de un una promesa
     return new Promise((resolve,reject)=>{
-        if(resulConnetion == true){
-            resolve(datos);
-        }else{
+        
+        if(typeof persona=="object"){ //si el array persona devuelve algo de tipo objeto lo devuelve como promesa
+            resolve(persona);
+        }else{ //si no envia un mensaje
             reject("No se han obtenido datos");
         }
     });
 
 }
 
-//RESUELVE PROMESA
-llamadaApi(api())
-    .then((respuesta)=>{
-        console.log( pintarResultado(respuesta))
-    })
-    .catch((error)=>{
-        console.log(error)
-    })
-
 //PINTA
-const pintarResultado=(respuesta)=>{
+/**
+ * Pinta en el dom dependiendo del tipo de argumento recibido
+ * @param {String | Object} objetoAPintar indicara lo que se debe pintar. Si es String solo se pinta P si no una lista
+ */
+const pintarResultado=(objetoAPintar)=>{
     
+    //crear un fragmento
     const fragmento=document.createDocumentFragment();
+
+    //captura el contenido dentro del div con ID  #datosdiv
     const datosDiv=document.querySelector('#datosdiv');
-    
-        respuesta.forEach(element => {
+
+    //Limpia lo que hubiese dentro
+    datosDiv.innerHTML="";
+
+    //Se evalua el objeto recibido. Si es de tipo objeto pintara una lista con los atributos del objeto
+
+    if(typeof objetoAPintar=="object"){
+
+        //crear etiquetas
         const div=document.createElement('DIV')
         const ul=document.createElement('UL')
         const liNombre=document.createElement('LI')
         const liCorreo=document.createElement('LI')
 
-        liNombre.textContent=element.nombre
-        liCorreo.textContent=element.email
+        //setear los textos en las etiquetas a partir de los atributos del objeto
+        liNombre.textContent=`Nombre: ${objetoAPintar.nombre}`
+        liCorreo.textContent=`Email: ${objetoAPintar.email}`
 
+        //insercion
         div.append(ul)
         ul.append(liNombre)
         ul.append(liCorreo)
         fragmento.append(div);
-    });
+
+    }else{ //si lo que recibe no es un objeto se pinta un parrafo con el mensaje(tipo String)
+        //creacion de etiqueta parrafo
+        const parrafo=document.createElement("P")
+        //insercion del mensaje recibido como texto dentro de P
+        parrafo.textContent=objetoAPintar;
+
+        //se añade P al fragmento
+        fragmento.append(parrafo)
+
+    }
     
+
+    // console.log(fragmento);
+
+    //lo que sea que se haya pintado en el fragmento escribe dentro de datos DIV
     datosDiv.append(fragmento);
     
 }
 
-//console.log(llamadaApi(chivato));
 
 
 
