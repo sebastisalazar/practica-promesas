@@ -7,6 +7,7 @@
 
 */
 
+/**************************VARIABLES**************************/
 
 const datos=[
                 {
@@ -16,6 +17,19 @@ const datos=[
             ]  
 
 const chivato=true;
+
+
+/**************************EVENTOS**************************/
+
+document.addEventListener('click', (ev) => {
+        ev.preventDefault();
+    if (ev.target.matches('#btninfo')) {
+        pintarResultado(ev.target.id);    
+    }
+})
+
+
+
 
 //SIMULACION 
 function api(){
@@ -50,7 +64,7 @@ const pintarResultado=(respuesta)=>{
     const fragmento=document.createDocumentFragment();
     const datosDiv=document.querySelector('#datosdiv');
     
-    respuesta.forEach(element => {
+        respuesta.forEach(element => {
         const div=document.createElement('DIV')
         const ul=document.createElement('UL')
         const liNombre=document.createElement('LI')
